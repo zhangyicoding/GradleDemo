@@ -1,0 +1,93 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.kotlin_version = '1.3.20'
+    repositories {
+        google()
+        jcenter()
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.3.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+// 常用命令./gradlew
+// -q   简单输出结果
+// -x   移除任务
+// -b   选择指定build.gradle文件，此时settings.gradle不生效
+// -p   指定构建目录，此时settings.gradle生效
+// projects 列出子项目名称列表
+// tasks --all    列出全部任务
+// (dependencies) app:dependencies  查看依赖（括号中的dependencies貌似可以省略，有什么区别？）
+
+// Hello World
+task helloTask << {
+    println("HelloWorld")
+}
+
+// 依赖
+task secondHelloTask(dependsOn: 'hello') << {
+    println("second hello")
+}
+
+// 动态task
+4.times { count ->
+    task "task$count" << {
+        println("this is task$count")
+    }
+}
+// 任务调用api
+// 通过 API 进行任务之间的通信 - 增加任务行为
+task0.dependsOn(task2, task3)
+
+// task以属性访问
+task aField << {
+    println("field name: $helloTask.name")
+}
+
+// 自定义属性
+task myPropertyTask {
+    ext.myCustomProperty = "custom property"
+}
+
+task printMyPropertyTask << {
+    println(myPropertyTask.myCustomProperty)
+}
+
+// 定义默认任务
+defaultTasks('helloTask', 'printMyPropertyTask')
+
+// 测试题
+task xiaoA << {
+    println("A")
+}
+
+task xiaoB(dependsOn: xiaoA) << {
+    println("B")
+}
+
+task xiaoC(dependsOn: [xiaoA, xiaoB]) << {
+    println("C")
+}
+
+task xiaoD(dependsOn: [xiaoA, xiaoC]) << {
+    println("D")
+}
+// ./gradlew -q xiaoD xiaoC -> A、B、C、D
+// ./gradlew -q xiaoD -x xiaoC -> A、D
