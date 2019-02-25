@@ -4,6 +4,15 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+
+String getChannel(isRelease) {
+    if (isRelease) {
+        return "release-channel"
+    }
+    return "debug-channel"
+}
+
+
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -28,10 +37,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = ["UMENG_CHANNEL": "release-channel"]
+            manifestPlaceholders = ["UMENG_CHANNEL": getChannel(true)]
         }
         debug {
-            manifestPlaceholders = ["UMENG_CHANNEL": "debug-channel"]
+            manifestPlaceholders = ["UMENG_CHANNEL": getChannel(false)]
         }
     }
     productFlavors {
