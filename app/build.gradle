@@ -38,6 +38,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = ["UMENG_CHANNEL": getChannel(true)]
+            signingConfig signingConfigs.release
         }
         debug {
             manifestPlaceholders = ["UMENG_CHANNEL": getChannel(false)]
